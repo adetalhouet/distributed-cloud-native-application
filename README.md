@@ -34,7 +34,7 @@ While the detailed steps are not included here, this demonstration can alternati
    ```bash
    mkdir hipster-demo
    cd hipster-demo
-   git clone git@github.com:skupperproject/skupper-example-microservices.git
+   git clone https://github.com/skupperproject/skupper-example-microservices.git
    ```
 
 3. Prepare the target clusters.
