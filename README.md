@@ -17,6 +17,9 @@ Top complete this tutorial, do the following:
 
 ## Prerequisites
 
+* The `kubectl` command-line tool, version 1.15 or later ([installation guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/))
+* The `skupper` command-line tool, the latest version ([installation guide](https://skupper.io/start/index.html#step-1-install-the-skupper-command-line-tool-in-your-environment))
+
 The basis for this demonstration is to depict the deployment of member microservices for an application across both private and public clusters and for the ability of these microsservices to communicate across a Virtual Application Network. As an example, the cluster deployment might be comprised of:
 
 * A "private cloud" cluster running on your local machine
@@ -26,24 +29,12 @@ While the detailed steps are not included here, this demonstration can alternati
 
 ## Step 1: Set up the demo
 
-1. On your local machine, make a directory for this tutorial, clone the example repo, and download the skupper-cli tool:
+1. On your local machine, make a directory for this tutorial and clone the example repo:
 
    ```bash
    mkdir hipster-demo
    cd hipster-demo
    git clone git@github.com:skupperproject/skupper-example-microservices.git
-   curl -fL https://github.com/skupperproject/skupper-cli/releases/download/untagged-c4967dd7e7f25e894c73/skupper-cli-v0.0.1-beta4-linux-64bit.tgz -o skupper.tgz
-   mkdir -p $HOME/bin
-   tar -xf skupper.tgz --directory $HOME/bin
-   export PATH=$PATH:$HOME/bin
-   ```
-
-   To test your installation, run the 'skupper-cli' command with no arguments. It will print a usage summary.
-
-   ```bash
-   $ skupper-cli
-   usage: skupper <command> <args>
-   [...]
    ```
 
 3. Prepare the target clusters.
@@ -54,29 +45,29 @@ While the detailed steps are not included here, this demonstration can alternati
 
 ## Step 2: Deploy the Virtual Application Network
 
-On each cluster, using the `skupper-cli` tool, define the Virtual Application Network and the connectivity for the peer clusters.
+On each cluster, using the `skupper` tool, define the Virtual Application Network and the connectivity for the peer clusters.
 
 1. In the terminal for the first public cluster, deploy the **public1** application router. Create two connection tokens for connections from the **public2** cluster and the **private1** cluster:
 
    ```bash
-   skupper-cli init --id public1
-   skupper-cli connection-token private1-to-public1-token.yaml
-   skupper-cli connection-token public2-to-public1-token.yaml
+   skupper init --id public1
+   skupper connection-token private1-to-public1-token.yaml
+   skupper connection-token public2-to-public1-token.yaml
    ```
 2. In the terminal for the second public cluster, deploy the **public2** application router, and connect to the **public1** cluster:
 
    ```bash
-   skupper-cli init --id public2
-   skupper-cli connection-token private1-to-public2-token.yaml
-   skupper-cli connect public2-to-public1-token.yaml
+   skupper init --id public2
+   skupper connection-token private1-to-public2-token.yaml
+   skupper connect public2-to-public1-token.yaml
    ```
 
 3. In the terminal for the private cluster, deploy the **private1** application router and define its connections to the **public1** cluster
 
    ```bash
-   skupper-cli init --edge --id private1
-   skupper-cli connect private1-to-public1-token.yaml
-   skupper-cli connect private1-to-public2-token.yaml
+   skupper init --edge --id private1
+   skupper connect private1-to-public1-token.yaml
+   skupper connect private1-to-public2-token.yaml
    ```
 
 ## Step 3: Deploy the application microservices
@@ -128,19 +119,19 @@ There are three script files labelled *a, b, and c*. These files annotate the se
 1. In the terminal for the **private1** cluster, execute the following annotation script:
 
    ```bash
-   ./annotate-services-a.sh
+   ~/hipster-demo/skupper-example-microservices/annotate-services-a.sh
    ```
 
 2. In the terminal for the **public1** cluster, execute the following annotation script:
 
    ```bash
-   ./annotate-services-b.sh
+   ~/hipster-demo/skupper-example-microservices/annotate-services-b.sh
    ```
 
 3. In the terminal for the **public2** cluster, execute the following annotation script:
 
    ```bash
-   kubectl apply -f ~/hipster-demo/skupper-example-microservices/deployment-ms-c.yaml
+   ~/hipster-demo/skupper-example-microservices/annotate-services-c.yaml
    ```
 
 ## Step 5:
@@ -162,7 +153,7 @@ Restore your cluster environment by returning the resources created in the demon
 
    ```bash
    kubectl delete -f ~/hipster-demo/skupper-example-microservices/deployment-ms-a.yaml
-   skupper-cli delete
+   skupper delete
    ```
 
 2. In the terminal for the **public1** cluster, delete the resources:
@@ -181,6 +172,5 @@ Restore your cluster environment by returning the resources created in the demon
 
 ## Next Steps
 
-Now that you know how to deploy multiple microservices for an application running on multiple-clusters, explore more skupper examples:
-
-[skupper examples]https://skupper.io/examples/index.html
+ - [Try the example for multi-cluster distributed web services](https://github.com/skupperproject/skupper-example-bookinfo)
+ - [Find more examples](https://skupper.io/examples/)
