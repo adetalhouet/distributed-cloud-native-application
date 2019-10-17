@@ -75,14 +75,12 @@ On each cluster, using the `skupper` tool, define the Virtual Application Networ
 After creating the Virtual Application Nework, deploy the microservices for the `Hipster Shop` application. There are three `deploymen .yaml` files
 labelled *a, b, and c*. These files (arbitrarily) define a subset of the application microservices to deploy to a cluster.
 
-| Deployment            | Microservices
-| --------------------- | ---------------------------------------- |
-| deployment-ms-a.yaml  | frontend, productcatalog, recommendation |
-| --------------------- | ---------------------------------------- |
-| deployment-ms-b.yaml  | ad, cart, checkout, currency, redis-cart |
-| --------------------- | ---------------------------------------- |
-| deployment-ms-c.yaml  | email, payment, shipping                 |
-| --------------------- | ---------------------------------------- |
+| Deployment           | Microservices
+| -------------------- | ---------------------------------------- |
+| deployment-ms-a.yaml | frontend, productcatalog, recommendation |
+| deployment-ms-b.yaml | ad, cart, checkout, currency, redis-cart |
+| deployment-ms-c.yaml | email, payment, shipping                 |
+
 
 1. In the terminal for the **private1** cluster, deploy the following:
 
@@ -110,11 +108,9 @@ There are three script files labelled *a, b, and c*. These files annotate the se
 | File                   | Service Annotations
 | ---------------------- | ---------------------------------------- |
 | annotate-services-a.sh | productcatalog, recommendation           |
-| ---------------------- | ---------------------------------------- |
 | annotate-services-b.sh | ad, cart, checkout, currency, redis-cart |
-| ---------------------- | ---------------------------------------- |
 | annotate-services-c.sh | email, payment, shipping                 |
-| ---------------------- | ---------------------------------------- |
+
 
 1. In the terminal for the **private1** cluster, execute the following annotation script:
 
