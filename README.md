@@ -64,7 +64,7 @@ On each cluster, using the `skupper` tool, define the Virtual Application Networ
 3. In the terminal for the private cluster, deploy the **private1** application router and define its connections to the **public1** and **public2** cluster
 
    ```bash
-   skupper init --edge --site-name private1
+   skupper init --site-name private1
    skupper connect public1-token.yaml
    skupper connect public2-token.yaml
    ```
