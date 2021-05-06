@@ -49,13 +49,6 @@ spec:
           value: "1"
         - name: DISABLE_DEBUGGER
           value: "1"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 220Mi
-          limits:
-            cpu: 200m
-            memory: 450Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -116,13 +109,6 @@ spec:
             value: "1"
           # - name: JAEGER_SERVICE_ADDR
           #   value: "jaeger-collector:14268"
-          resources:
-            requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
@@ -186,10 +172,3 @@ spec:
         livenessProbe:
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:3550"]
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
