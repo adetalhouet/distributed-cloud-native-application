@@ -41,7 +41,10 @@ While the detailed steps are not included here, this demonstration can alternati
 
    1. On your local machine, log in to each cluster in a separate terminal session.
    2. In each cluster, create a namespace to use for the demo.
-   3. In each cluster, set the kubectl config context to use the demo namespace [(see kubectl cheat sheet)](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+   3. In each cluster, set the kubectl config context to use the demo namespace [(see kubectl cheat sheet for more information)](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+   ```bash
+   kubectl config set-context --current --namespace <namespace>
+   ```
 
 ## Step 2: Deploy the Virtual Application Network
 
@@ -51,33 +54,33 @@ On each cluster, using the `skupper` tool, define the Virtual Application Networ
 
    ```bash
    skupper init --site-name public1
-   skupper connection-token public1-token.yaml
+   skupper token create public1-token.yaml
    ```
 2. In the terminal for the second public cluster, deploy the **public2** application router, create a connection token for connections from the **private1** cluser and connect to the **public1** cluster:
 
    ```bash
    skupper init --site-name public2
-   skupper connection-token public2-token.yaml
-   skupper connect public1-token.yaml
+   skupper token create public2-token.yaml
+   skupper link create public1-token.yaml
    ```
 
 3. In the terminal for the private cluster, deploy the **private1** application router and define its connections to the **public1** and **public2** cluster
 
    ```bash
    skupper init --site-name private1
-   skupper connect public1-token.yaml
-   skupper connect public2-token.yaml
+   skupper link create public1-token.yaml
+   skupper link create public2-token.yaml
    ```
 
 4. In each of the cluster terminals, verify connectivity has been established
 
    ```bash
-   skupper check-connection all
+   skupper link status
    ```
 
 ## Step 3: Deploy the application microservices
 
-After creating the Virtual Application Nework, deploy the grpc based microservices for the `Hipster Shop` application. There are three `deploymen .yaml` files
+After creating the Virtual Application Nework, deploy the grpc based microservices for the `Hipster Shop` application. There are three `deployment .yaml` files
 labelled *a, b, and c*. These files (arbitrarily) define a subset of the application microservices to deploy to a cluster.
 
 | Deployment           | Microservices
@@ -141,7 +144,7 @@ The web frontend for the `Hipster Shop` application can be accessed via the *fro
 terminal for the **private1** cluster, start a firefox browser and access the shop UI.
 
    ```bash
-   /usr/bin/firefox --new-window  "http://$(kubectl get service frontend-external -o=jsonpath='{.spec.clusterIP}'):80/"
+   /usr/bin/firefox --new-window  "http://$(kubectl get service frontend-external -o=jsonpath='{.spec.clusterIP}')/"
    ```
 
 Open a browser and use the url provided above to access the `Hipster Shop`.
