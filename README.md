@@ -54,7 +54,7 @@ On each cluster, using the `skupper` tool, define the Virtual Application Networ
 
    ```bash
    skupper init --site-name public1
-   skupper token create public1-token.yaml
+   skupper token create public1-token.yaml --uses 2
    ```
 2. In the terminal for the second public cluster, deploy the **public2** application router, create a connection token for connections from the **private1** cluser and connect to the **public1** cluster:
 
