@@ -1,8 +1,8 @@
 # Multi-cluster Cloud-Native grpc (microservices) application demo
 
-This tutorial demonstrates how to deploy the [Hipster Shop](https://github.com/GoogleCloudPlatform/microservices-demo/) microservices demo application across multiple Kubernetes clusters that are located in different public and private cloud providers. This project contains a 10-tier microservices application developed by Google to demonstrate the use of technologies like Kubernetes.
+This tutorial demonstrates how to deploy the [Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo/) microservices demo application across multiple Kubernetes clusters that are located in different public and private cloud providers. This project contains a 10-tier microservices application developed by Google to demonstrate the use of technologies like Kubernetes.
 
-In this tutorial, you will create a Virtual Application Network that enables communications across the public and private clusters. You will then deploy a subset of the application's grpc based microservices to each cluster. You will then access the `Hipster Shop` web interface to browse items, add them to the cart and purchase them.
+In this tutorial, you will create a Virtual Application Network that enables communications across the public and private clusters. You will then deploy a subset of the application's grpc based microservices to each cluster. You will then access the `Online Boutique` web interface to browse items, add them to the cart and purchase them.
 
 Top complete this tutorial, do the following:
 
@@ -11,7 +11,7 @@ Top complete this tutorial, do the following:
 * [Step 2: Deploy the Virtual Application Network](#step-2-deploy-the-virtual-application-network)
 * [Step 3: Deploy the application microservices](#step-3-deploy-the-application-microservices)
 * [Step 4: Expose the microservices to the Virtual Application Network](#step-4-expose-the-microservices-to-the-virtual-application-network)
-* [Step 5: Access the Hipster Shop Application](#step-5-access-the-hipster-shop-application)
+* [Step 5: Access the Online Boutique Application](#step-5-access-the-boutique-shop-application)
 * [Cleaning up](#cleaning-up)
 * [Next steps](#next-steps)
 
@@ -32,8 +32,8 @@ While the detailed steps are not included here, this demonstration can alternati
 1. On your local machine, make a directory for this tutorial and clone the example repo:
 
    ```bash
-   mkdir hipster-demo
-   cd hipster-demo
+   mkdir boutique-demo
+   cd boutique-demo
    git clone https://github.com/skupperproject/skupper-example-grpc.git
    ```
 
@@ -80,7 +80,7 @@ On each cluster, using the `skupper` tool, define the Virtual Application Networ
 
 ## Step 3: Deploy the application microservices
 
-After creating the Virtual Application Nework, deploy the grpc based microservices for the `Hipster Shop` application. There are three `deployment .yaml` files
+After creating the Virtual Application Network, deploy the grpc based microservices for the `Online Boutique` application. There are three `deployment .yaml` files
 labelled *a, b, and c*. These files (arbitrarily) define a subset of the application microservices to deploy to a cluster.
 
 | Deployment           | Microservices
@@ -93,19 +93,19 @@ labelled *a, b, and c*. These files (arbitrarily) define a subset of the applica
 1. In the terminal for the **private1** cluster, deploy the following:
 
    ```bash
-   kubectl apply -f ~/hipster-demo/skupper-example-grpc/deployment-ms-a.yaml
+   kubectl apply -f ~/boutique-demo/skupper-example-grpc/deployment-ms-a.yaml
    ```
 
 2. In the terminal for the **public1** cluster, deploy the following:
 
    ```bash
-   kubectl apply -f ~/hipster-demo/skupper-example-grpc/deployment-ms-b.yaml
+   kubectl apply -f ~/boutique-demo/skupper-example-grpc/deployment-ms-b.yaml
    ```
 
 3. In the terminal for the **public2** cluster, deploy the following:
 
    ```bash
-   kubectl apply -f ~/hipster-demo/skupper-example-grpc/deployment-ms-c.yaml
+   kubectl apply -f ~/boutique-demo/skupper-example-grpc/deployment-ms-c.yaml
    ```
 
 ## Step 4: Expose the microservices to the Virtual Application Network
@@ -123,31 +123,31 @@ There are three script files labelled *-a, -b, and -c*. These files expose the s
 1. In the terminal for the **private1** cluster, execute the following annotation script:
 
    ```bash
-   ~/hipster-demo/skupper-example-grpc/expose-deployments-a.sh
+   ~/boutique-demo/skupper-example-grpc/expose-deployments-a.sh
    ```
 
 2. In the terminal for the **public1** cluster, execute the following annotation script:
 
    ```bash
-   ~/hipster-demo/skupper-example-grpc/expose-deployments-b.sh
+   ~/boutique-demo/skupper-example-grpc/expose-deployments-b.sh
    ```
 
 3. In the terminal for the **public2** cluster, execute the following annotation script:
 
    ```bash
-   ~/hipster-demo/skupper-example-grpc/expose-deployments-c.sh
+   ~/boutique-demo/skupper-example-grpc/expose-deployments-c.sh
    ```
 
-## Step 5:
+## Step 5: Access The Boutique Shop Application
 
-The web frontend for the `Hipster Shop` application can be accessed via the *frontend-external* service. In the
+The web frontend for the `Online Boutique` application can be accessed via the *frontend-external* service. In the
 terminal for the **private1** cluster, start a firefox browser and access the shop UI.
 
    ```bash
    /usr/bin/firefox --new-window  "http://$(kubectl get service frontend-external -o=jsonpath='{.spec.clusterIP}')/"
    ```
 
-Open a browser and use the url provided above to access the `Hipster Shop`.
+Open a browser and use the url provided above to access the `Online Boutique`.
 
 ## Cleaning Up
 
@@ -156,24 +156,24 @@ Restore your cluster environment by returning the resources created in the demon
 1. In the terminal for the **private1** cluster, delete the resources:
 
    ```bash
-   ~/hipster-demo/skupper-example-grpc/unexpose-deployments-a.sh
-   kubectl delete -f ~/hipster-demo/skupper-example-grpc/deployment-ms-a.yaml
+   ~/boutique-demo/skupper-example-grpc/unexpose-deployments-a.sh
+   kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-a.yaml
    skupper delete
    ```
 
 2. In the terminal for the **public1** cluster, delete the resources:
 
    ```bash
-   ~/hipster-demo/skupper-example-grpc/unexpose-deployments-b.sh
-   kubectl delete -f ~/hipster-demo/skupper-example-grpc/deployment-ms-b.yaml
+   ~/boutique-demo/skupper-example-grpc/unexpose-deployments-b.sh
+   kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-b.yaml
    skupper delete
    ```
 
 3. In the terminal for the **public2** cluster, delete the resources:
 
    ```bash
-   ~/hipster-demo/skupper-example-grpc/unexpose-deployments-c.sh
-   kubectl delete -f ~/hipster-demo/skupper-example-grpc/deployment-ms-c.yaml
+   ~/boutique-demo/skupper-example-grpc/unexpose-deployments-c.sh
+   kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-c.yaml
    skupper delete
    ```
 
