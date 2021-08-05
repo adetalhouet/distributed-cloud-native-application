@@ -93,19 +93,19 @@ labelled *a, b, and c*. These files (arbitrarily) define a subset of the applica
 1. In the terminal for the **private1** cluster, deploy the following:
 
    ```bash
-   kubectl apply -f ~/boutique-demo/skupper-example-grpc/deployment-ms-a.yaml
+   kubectl apply -f skupper-example-grpc/deployment-ms-a.yaml
    ```
 
 2. In the terminal for the **public1** cluster, deploy the following:
 
    ```bash
-   kubectl apply -f ~/boutique-demo/skupper-example-grpc/deployment-ms-b.yaml
+   kubectl apply -f skupper-example-grpc/deployment-ms-b.yaml
    ```
 
 3. In the terminal for the **public2** cluster, deploy the following:
 
    ```bash
-   kubectl apply -f ~/boutique-demo/skupper-example-grpc/deployment-ms-c.yaml
+   kubectl apply -f skupper-example-grpc/deployment-ms-c.yaml
    ```
 
 ## Step 4: Expose the microservices to the Virtual Application Network
@@ -123,19 +123,19 @@ There are three script files labelled *-a, -b, and -c*. These files expose the s
 1. In the terminal for the **private1** cluster, execute the following annotation script:
 
    ```bash
-   ~/boutique-demo/skupper-example-grpc/expose-deployments-a.sh
+   skupper-example-grpc/expose-deployments-a.sh
    ```
 
 2. In the terminal for the **public1** cluster, execute the following annotation script:
 
    ```bash
-   ~/boutique-demo/skupper-example-grpc/expose-deployments-b.sh
+   skupper-example-grpc/expose-deployments-b.sh
    ```
 
 3. In the terminal for the **public2** cluster, execute the following annotation script:
 
    ```bash
-   ~/boutique-demo/skupper-example-grpc/expose-deployments-c.sh
+   skupper-example-grpc/expose-deployments-c.sh
    ```
 
 ## Step 5: Access The Boutique Shop Application
@@ -156,7 +156,7 @@ Restore your cluster environment by returning the resources created in the demon
 1. In the terminal for the **private1** cluster, delete the resources:
 
    ```bash
-   ~/boutique-demo/skupper-example-grpc/unexpose-deployments-a.sh
+   skupper-example-grpc/unexpose-deployments-a.sh
    kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-a.yaml
    skupper delete
    ```
@@ -164,7 +164,7 @@ Restore your cluster environment by returning the resources created in the demon
 2. In the terminal for the **public1** cluster, delete the resources:
 
    ```bash
-   ~/boutique-demo/skupper-example-grpc/unexpose-deployments-b.sh
+   skupper-example-grpc/unexpose-deployments-b.sh
    kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-b.yaml
    skupper delete
    ```
@@ -172,7 +172,7 @@ Restore your cluster environment by returning the resources created in the demon
 3. In the terminal for the **public2** cluster, delete the resources:
 
    ```bash
-   ~/boutique-demo/skupper-example-grpc/unexpose-deployments-c.sh
+   skupper-example-grpc/unexpose-deployments-c.sh
    kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-c.yaml
    skupper delete
    ```
