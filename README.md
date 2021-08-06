@@ -157,7 +157,7 @@ Restore your cluster environment by returning the resources created in the demon
 
    ```bash
    skupper-example-grpc/unexpose-deployments-a.sh
-   kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-a.yaml
+   kubectl delete -f skupper-example-grpc/deployment-ms-a.yaml
    skupper delete
    ```
 
@@ -165,7 +165,7 @@ Restore your cluster environment by returning the resources created in the demon
 
    ```bash
    skupper-example-grpc/unexpose-deployments-b.sh
-   kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-b.yaml
+   kubectl delete -f skupper-example-grpc/deployment-ms-b.yaml
    skupper delete
    ```
 
@@ -173,7 +173,7 @@ Restore your cluster environment by returning the resources created in the demon
 
    ```bash
    skupper-example-grpc/unexpose-deployments-c.sh
-   kubectl delete -f ~/boutique-demo/skupper-example-grpc/deployment-ms-c.yaml
+   kubectl delete -f skupper-example-grpc/deployment-ms-c.yaml
    skupper delete
    ```
 
