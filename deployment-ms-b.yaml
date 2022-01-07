@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.3.4
+          image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.3.0
           ports:
           - containerPort: 5050
           readinessProbe:
@@ -75,7 +75,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/google-samples/microservices-demo/cartservice:v0.3.4
+        image: gcr.io/google-samples/microservices-demo/cartservice:v0.3.0
         ports:
         - containerPort: 7070
         env:
@@ -111,7 +111,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.3.4
+        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.3.0
         ports:
         - name: grpc
           containerPort: 7000
