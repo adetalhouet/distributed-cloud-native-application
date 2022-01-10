@@ -27,7 +27,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.3.4
+        image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.3.0
         ports:
         - containerPort: 8080
         readinessProbe:
@@ -67,7 +67,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: gcr.io/google-samples/microservices-demo/frontend:v0.3.4
+          image: gcr.io/google-samples/microservices-demo/frontend:v0.3.0
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -152,7 +152,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.3.4
+        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.3.0
         ports:
         - containerPort: 3550
         env:
