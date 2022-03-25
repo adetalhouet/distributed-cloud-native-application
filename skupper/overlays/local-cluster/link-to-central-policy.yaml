@@ -1,0 +1,102 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: link-to-central
+  namespace: open5gcore
+  annotations:
+    policy.open-cluster-management.io/standards: Infrastructure security
+    policy.open-cluster-management.io/categories: Data security
+    policy.open-cluster-management.io/controls: PR.DS-1 Data-at-rest
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: create-secret-from-configmap
+        spec:
+          remediationAction: enforce
+          severity: high
+          namespaceSelector:
+            exclude:
+              - openshift-*
+              - kube-*
+            include:
+              - open5gcore
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                kind: Secret
+                apiVersion: v1
+                metadata:
+                  name: link-to-central
+                  namespace: open5gcore
+                  labels:
+                    skupper.io/type: connection-token
+                  annotations:
+                    edge-host: '{{hub fromConfigMap "open5gcore" "skupper-tls" "edge-host" hub}}'
+                    edge-port: '443'
+                    inter-router-host: '{{hub fromConfigMap "open5gcore" "skupper-tls" "inter-router-host" hub}}'
+                    inter-router-port: '443'
+                data:
+                  ca.crt: '{{hub fromConfigMap "open5gcore" "skupper-tls" "ca.crt" hub}}'
+                  tls.key: '{{hub fromConfigMap "open5gcore" "skupper-tls" "tls.key" hub}}'
+                  tls.crt: '{{hub fromConfigMap "open5gcore" "skupper-tls" "tls.crt" hub}}'
+                type: Opaque
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: copy-secret-to-configmap
+        spec:
+          remediationAction: enforce
+          severity: high
+          namespaceSelector:
+            exclude:
+              - openshift-*
+              - kube-*
+            include:
+              - open5gcore
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                kind: ConfigMap
+                apiVersion: v1
+                metadata:
+                  name: skupper-tls
+                  namespace: open5gcore
+                data:
+                  ca.crt: '{{ fromSecret "open5gcore" "link-to-central" "ca.crt"}}'
+                  tls.key: '{{ fromSecret "open5gcore" "link-to-central" "tls.key"}}'
+                  tls.crt: '{{ fromSecret "open5gcore" "link-to-central" "tls.crt" }}'
+                  edge-host: '{{ ( index ( lookup "v1"  "Secret" "open5gcore" "link-to-central").metadata.annotations "edge-host" ) }}'
+                  inter-router-host: '{{ ( index ( lookup "v1"  "Secret" "open5gcore" "link-to-central").metadata.annotations "inter-router-host" ) }}'
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: link-to-central-binding
+  namespace: open5gcore
+placementRef:
+  name: link-to-central-clusters
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+  - name: link-to-central
+    kind: Policy
+    apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: link-to-central-clusters
+  namespace: open5gcore
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchLabels:
+      5g-core: "True"

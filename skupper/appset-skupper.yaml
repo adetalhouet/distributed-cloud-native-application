@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: skupper
+  namespace: openshift-gitops
+spec:
+  generators:
+    - clusterDecisionResource:
+        configMapRef: acm-placement
+        labelSelector:
+          matchLabels:
+            cluster.open-cluster-management.io/placement: online-boutique-clusters
+        requeueAfterSeconds: 10
+  template:
+    metadata:
+      name: 'skupper-{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/adetalhouet/online-boutique'
+        targetRevision: main
+        path: 'skupper/overlays/{{name}}'
+      destination:
+        server: '{{server}}'
+        namespace: open5gcore
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: false
+        syncOptions:
+          - CreateNamespace=true
+      ignoreDifferences:
+      - group: ""
+        kind: Secret
+        jsonPointers:
+        - /data
