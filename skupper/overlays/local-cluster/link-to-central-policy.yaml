@@ -2,7 +2,7 @@ apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
   name: link-to-central
-  namespace: open5gcore
+  namespace: onlineboutique
   annotations:
     policy.open-cluster-management.io/standards: Infrastructure security
     policy.open-cluster-management.io/categories: Data security
@@ -24,7 +24,7 @@ spec:
               - openshift-*
               - kube-*
             include:
-              - open5gcore
+              - onlineboutique
           object-templates:
             - complianceType: musthave
               objectDefinition:
@@ -32,18 +32,18 @@ spec:
                 apiVersion: v1
                 metadata:
                   name: link-to-central
-                  namespace: open5gcore
+                  namespace: onlineboutique
                   labels:
                     skupper.io/type: connection-token
                   annotations:
-                    edge-host: '{{hub fromConfigMap "open5gcore" "skupper-tls" "edge-host" hub}}'
+                    edge-host: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "edge-host" hub}}'
                     edge-port: '443'
-                    inter-router-host: '{{hub fromConfigMap "open5gcore" "skupper-tls" "inter-router-host" hub}}'
+                    inter-router-host: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "inter-router-host" hub}}'
                     inter-router-port: '443'
                 data:
-                  ca.crt: '{{hub fromConfigMap "open5gcore" "skupper-tls" "ca.crt" hub}}'
-                  tls.key: '{{hub fromConfigMap "open5gcore" "skupper-tls" "tls.key" hub}}'
-                  tls.crt: '{{hub fromConfigMap "open5gcore" "skupper-tls" "tls.crt" hub}}'
+                  ca.crt: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "ca.crt" hub}}'
+                  tls.key: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "tls.key" hub}}'
+                  tls.crt: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "tls.crt" hub}}'
                 type: Opaque
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
@@ -58,7 +58,7 @@ spec:
               - openshift-*
               - kube-*
             include:
-              - open5gcore
+              - onlineboutique
           object-templates:
             - complianceType: musthave
               objectDefinition:
@@ -66,19 +66,19 @@ spec:
                 apiVersion: v1
                 metadata:
                   name: skupper-tls
-                  namespace: open5gcore
+                  namespace: onlineboutique
                 data:
-                  ca.crt: '{{ fromSecret "open5gcore" "link-to-central" "ca.crt"}}'
-                  tls.key: '{{ fromSecret "open5gcore" "link-to-central" "tls.key"}}'
-                  tls.crt: '{{ fromSecret "open5gcore" "link-to-central" "tls.crt" }}'
-                  edge-host: '{{ ( index ( lookup "v1"  "Secret" "open5gcore" "link-to-central").metadata.annotations "edge-host" ) }}'
-                  inter-router-host: '{{ ( index ( lookup "v1"  "Secret" "open5gcore" "link-to-central").metadata.annotations "inter-router-host" ) }}'
+                  ca.crt: '{{ fromSecret "onlineboutique" "link-to-central" "ca.crt"}}'
+                  tls.key: '{{ fromSecret "onlineboutique" "link-to-central" "tls.key"}}'
+                  tls.crt: '{{ fromSecret "onlineboutique" "link-to-central" "tls.crt" }}'
+                  edge-host: '{{ ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").metadata.annotations "edge-host" ) }}'
+                  inter-router-host: '{{ ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").metadata.annotations "inter-router-host" ) }}'
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
   name: link-to-central-binding
-  namespace: open5gcore
+  namespace: onlineboutique
 placementRef:
   name: link-to-central-clusters
   kind: PlacementRule
