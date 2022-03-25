@@ -14,13 +14,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: paymentservice
+  annotations:
+    skupper.io/proxy: http2
+    skupper.io/address: paymentservice
 spec:
   selector:
     matchLabels:
       app: paymentservice
-  annotations:
-    skupper.io/proxy: http2
-    skupper.io/address: paymentservice
   template:
     metadata:
       labels:
