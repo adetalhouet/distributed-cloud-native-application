@@ -92,11 +92,11 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
   name: link-to-central-clusters
-  namespace: open5gcore
+  namespace: onlineboutique
 spec:
   clusterConditions:
   - status: "True"
     type: ManagedClusterConditionAvailable
   clusterSelector:
     matchLabels:
-      5g-core: "True"
+      online-boutique: "True"
