@@ -17,7 +17,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: 'https://github.com/adetalhouet/online-boutique'
+        repoURL: 'https://github.com/adetalhouet/skupper-example-grpc'
         targetRevision: main
         path: 'online-boutique'
         helm: 
