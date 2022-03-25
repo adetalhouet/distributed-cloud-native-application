@@ -22,7 +22,7 @@ spec:
         path: 'skupper/overlays/{{name}}'
       destination:
         server: '{{server}}'
-        namespace: open5gcore
+        namespace: onlineboutique
       syncPolicy:
         automated:
           prune: true

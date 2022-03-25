@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: skupper-site
-  namespace: open5gcore
+  namespace: onlineboutique
 data:
   name: CHANGEME
   console-authentication: openshift
