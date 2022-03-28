@@ -24,18 +24,19 @@ spec:
     port: 80
     targetPort: 8080
 ---
-apiVersion: v1
-kind: Service
+kind: Route
+apiVersion: route.openshift.io/v1
 metadata:
-  name: frontend-external
+  name: frontend
+  namespace: onlineboutique
 spec:
-  type: LoadBalancer
-  selector:
-    app: frontend
-  ports:
-  - name: http
-    port: 80
-    targetPort: 8080
+  to:
+    kind: Service
+    name: frontend
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None
 ---
 apiVersion: apps/v1
 kind: Deployment
