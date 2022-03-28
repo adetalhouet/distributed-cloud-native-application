@@ -15,7 +15,7 @@ kind: Deployment
 metadata:
   name: redis-cart
   annotations:
-    skupper.io/proxy: http2
+    skupper.io/proxy: tcp
     skupper.io/address: redis-cart
 spec:
   selector:
