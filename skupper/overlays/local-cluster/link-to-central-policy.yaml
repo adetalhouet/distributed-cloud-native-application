@@ -71,4 +71,4 @@ spec:
     type: ManagedClusterConditionAvailable
   clusterSelector:
     matchLabels:
-      online-boutique: "True"
+      link-to-central: "True"
