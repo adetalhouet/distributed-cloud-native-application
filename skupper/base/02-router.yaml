@@ -6,3 +6,4 @@ metadata:
 data:
   name: CHANGEME
   console-authentication: openshift
+  router-console: "true"
