@@ -7,6 +7,7 @@ metadata:
     policy.open-cluster-management.io/standards: Infrastructure security
     policy.open-cluster-management.io/categories: Data security
     policy.open-cluster-management.io/controls: PR.DS-1 Data-at-rest
+    policy.open-cluster-management.io/trigger-update: ''
 spec:
   remediationAction: enforce
   disabled: false
@@ -36,43 +37,15 @@ spec:
                   labels:
                     skupper.io/type: connection-token
                   annotations:
-                    edge-host: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "edge-host" hub}}'
+                    edge-host: '{{hub ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").metadata.annotations "edge-host" ) hub}}'
                     edge-port: '443'
-                    inter-router-host: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "inter-router-host" hub}}'
+                    inter-router-host: '{{hub ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").metadata.annotations "inter-router-host" ) hub}}'
                     inter-router-port: '443'
                 data:
-                  ca.crt: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "ca.crt" hub}}'
-                  tls.key: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "tls.key" hub}}'
-                  tls.crt: '{{hub fromConfigMap "onlineboutique" "skupper-tls" "tls.crt" hub}}'
+                  ca.crt: '{{hub ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").data "ca.crt" ) hub}}'
+                  tls.key: '{{hub ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").data "tls.key" ) hub}}'
+                  tls.crt: '{{hub ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").data "tls.crt" ) hub}}'
                 type: Opaque
-    - objectDefinition:
-        apiVersion: policy.open-cluster-management.io/v1
-        kind: ConfigurationPolicy
-        metadata:
-          name: copy-secret-to-configmap
-        spec:
-          remediationAction: enforce
-          severity: high
-          namespaceSelector:
-            exclude:
-              - openshift-*
-              - kube-*
-            include:
-              - onlineboutique
-          object-templates:
-            - complianceType: musthave
-              objectDefinition:
-                kind: ConfigMap
-                apiVersion: v1
-                metadata:
-                  name: skupper-tls
-                  namespace: onlineboutique
-                data:
-                  ca.crt: '{{ fromSecret "onlineboutique" "link-to-central" "ca.crt"}}'
-                  tls.key: '{{ fromSecret "onlineboutique" "link-to-central" "tls.key"}}'
-                  tls.crt: '{{ fromSecret "onlineboutique" "link-to-central" "tls.crt" }}'
-                  edge-host: '{{ ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").metadata.annotations "edge-host" ) }}'
-                  inter-router-host: '{{ ( index ( lookup "v1"  "Secret" "onlineboutique" "link-to-central").metadata.annotations "inter-router-host" ) }}'
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
