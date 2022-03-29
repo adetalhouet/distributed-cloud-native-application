@@ -7,6 +7,7 @@ metadata:
     policy.open-cluster-management.io/standards: Infrastructure security
     policy.open-cluster-management.io/categories: Data security
     policy.open-cluster-management.io/controls: PR.DS-1 Data-at-rest
+    policy.open-cluster-management.io/trigger-update: ""
 spec:
   remediationAction: enforce
   disabled: false
