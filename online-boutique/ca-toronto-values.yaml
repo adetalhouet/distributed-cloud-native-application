@@ -1,6 +1,6 @@
 # global defaults
 global:
-  tag: v0.3.4
+  tag: v0.3.6
   repository: gcr.io/google-samples/microservices-demo
 
 # microservice specific details
@@ -39,3 +39,6 @@ rediscart:
 shippingservice:
   enabled: false
   image: shippingservice
+loadgenerator:
+  enabled: false
+  image: loadgenerator
