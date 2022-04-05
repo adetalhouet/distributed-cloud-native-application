@@ -33,7 +33,7 @@ recommendationservice:
   enabled: false
   image: recommendationservice
 rediscart:
-  enabled: true
+  enabled: false
   image: redis
   tag: alpine
 shippingservice:
