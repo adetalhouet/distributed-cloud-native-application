@@ -6,16 +6,16 @@ global:
 # microservice specific details
 # Note: `repository` and `tag` can be overriten individually if needed
 adservice:
-  enabled: false
+  enabled: true
   image: adservice
 cartservice:
-  enabled: false
+  enabled: true
   image: cartservice
 checkoutservice:
-  enabled: false
+  enabled: true
   image: checkoutservice
 currencyservice:
-  enabled: false
+  enabled: true
   image: currencyservice
 emailservice:
   enabled: true

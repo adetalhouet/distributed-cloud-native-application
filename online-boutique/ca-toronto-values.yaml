@@ -37,7 +37,7 @@ rediscart:
   image: redis
   tag: alpine
 shippingservice:
-  enabled: false
+  enabled: true
   image: shippingservice
 loadgenerator:
   enabled: false
