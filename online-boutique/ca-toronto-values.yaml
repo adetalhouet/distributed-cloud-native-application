@@ -24,7 +24,7 @@ frontend:
   enabled: false
   image: frontend
 paymentservice:
-  enabled: false
+  enabled: true
   image: paymentservice
 productcatalogservice:
   enabled: false
