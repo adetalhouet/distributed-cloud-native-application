@@ -48,11 +48,11 @@ spec:
           periodSeconds: 10
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
-       resources:
-          requests:
-            cpu: 200m
-            memory: 64Mi
-          limits:
-            cpu: 300m
-            memory: 128Mi
+        resources:
+            requests:
+              cpu: 200m
+              memory: 64Mi
+            limits:
+              cpu: 300m
+              memory: 128Mi
 {{ end }}
