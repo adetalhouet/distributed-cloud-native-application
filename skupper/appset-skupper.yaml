@@ -17,8 +17,8 @@ spec:
     spec:
       project: default
       source:
-        repoURL: 'https://github.com/adetalhouet/skupper-example-grpc'
-        targetRevision: master
+        repoURL: 'https://github.com/adetalhouet/distributed-cloud-native-application'
+        targetRevision: main
         path: 'skupper/overlays/{{name}}'
       destination:
         server: '{{server}}'
