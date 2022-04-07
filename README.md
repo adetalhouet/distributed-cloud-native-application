@@ -1,4 +1,4 @@
-# Multi-cluster Cloud-Native (microservices) application demo
+# Multi environment application deployment and interconnect
 
 This tutorial demonstrates how to deploy the [Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo/) microservices demo application across bare metal and multiple Kubernetes clusters that are located in different public and private cloud providers. This project contains a 10-tier microservices application developed by Google to demonstrate the use of technologies like Kubernetes.
 
