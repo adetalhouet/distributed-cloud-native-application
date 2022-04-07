@@ -13,19 +13,19 @@ You will then be able to access the `Online Boutique` web interface to browse it
     - [Expected result](#expected-result)
     - [Prerequisites](#prerequisites)
     - [Current setup](#current-setup)
-- [Multi-cluster setup](#multicluster-setup)
-    - [Create a managed cluster set](#create-managed-cluster-set)
+- [Multi-cluster setup](#multi-cluster-setup)
+    - [Create a managed cluster set](#create-a-managed-cluster-set)
     - [Import the managed clusters into ArgoCD](#import-the-managed-clusters-into-argocd)
 - [Deploy the Virtual Application Network](#deploy-the-virtual-application-network)
-    - [Site establishment](#site-establishement)
-    - [mTLS establishement](#mtls-establishement)
+    - [Site establishment](#site-establishment)
+    - [mTLS establishment](#mtls-establishment)
     - [Skupper gateway for bare metal server](#skupper-gateway-for-bare-metal-server)
     - [Service Layer Interconnect](#service-layer-interconnect)
 - [Deploy the application](#deploy-the-application)
     - [Access the online boutique](#access-the-online-boutique)
     - [Traffic path selection](#traffic-path-selection)
-- [Rotate TLS certificates](#rotate-certificates)
-- [TL;DR](#tl;dr)
+- [Rotate TLS certificates](#rotate-tls-certificates)
+- [TLDR](#tldr)
 
 <!-- TOC -->
 
@@ -133,7 +133,7 @@ In each site, in the namespace `onlineboutique` you should see the Skupper pod. 
 
 ![](assets/skupper-argo.png)
 
-### mTLS establishement
+### mTLS establishment
 
 Skupper rely on an mTLS to establish a Virtual Application Network. As such, it requires a `Secret` containing the certificate authority, the certificate and the key to be present in all sites.
 To have Skupper populating the TLS data into a secret, we can simply create an empty secret with this label `skupper.io/type: connection-token-request`. Skupper site controller will populate all the required information in this secret automatically. In our example, the secret will be generated in the **local-cluster**.
