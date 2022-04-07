@@ -8,12 +8,14 @@ You will then be able to access the `Online Boutique` web interface to browse it
 ## Table of Contents
 
 <!-- TOC -->
-- [High level architecture](#high-level-architecture)
-- [Expected result](#expected-result)
-- [Prerequisites](#prerequisites)
-- [Current setup](#current-setup)
-- [Create a managed cluster set](#create-managed-cluster-set)
-- [Import the managed clusters into ArgoCD](#import-the-managed-clusters-into-argocd)
+- [Overview](#overview)
+    - [High level architecture](#high-level-architecture)
+    - [Expected result](#expected-result)
+    - [Prerequisites](#prerequisites)
+    - [Current setup](#current-setup)
+- [Multi-cluster setup](#multicluster-setup)
+    - [Create a managed cluster set](#create-managed-cluster-set)
+    - [Import the managed clusters into ArgoCD](#import-the-managed-clusters-into-argocd)
 - [Deploy the Virtual Application Network](#deploy-the-virtual-application-network)
     - [Site establishment](#site-establishement)
     - [mTLS establishement](#mtls-establishement)
@@ -26,13 +28,15 @@ You will then be able to access the `Online Boutique` web interface to browse it
 
 <!-- TOC -->
 
-## High level architecture
+## Overview
+
+### High level architecture
 ![](assets/high-level-arch.png)
 
-## Expected result
+### Expected result
 ![](assets/skupper-service-interaction.png)
 
-## Prerequisites
+### Prerequisites
 
 - Red Hat OpenShift 4.9
 - Red Hat Advanced Cluster Management 2.4
@@ -41,7 +45,7 @@ You will then be able to access the `Online Boutique` web interface to browse it
 - One bare metal server (could be a VM)
     - [skupper cli installed](https://skupper.io/start/index.html#step-1-install-the-skupper-command-line-tool-in-your-environment)
 
-## Current setup
+### Current setup
 
 I have the following clusters already imported in RHACM. 
 ~~~
@@ -54,7 +58,9 @@ us-philly       true           https://aks-rhdps-cc8892b9.hcp.eastus.azmk8s.io:4
 
 When RHACM manages a cluster, it creates a namespace that have its name, and uses this namespace to host information it controls, such as policies generated for that cluster.
 
-## Create a managed cluster set
+## Multi-cluster setup
+
+### Create a managed cluster set
 
 In order to manage the various K8S clusters, we create a `ManagedClusterSet` called **online-boutique** in Red Hat Advanced Cluster Management. To add clusters in this clusterSet, we need to add the following label `cluster.open-cluster-management.io/clusterset=online-boutique` to the `ManagedClusters` to import.
 
@@ -75,7 +81,7 @@ This is the result in RHACM
 
 [Find more information about ManagedClusterSet](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html/clusters/managing-your-clusters#creating-a-managedclusterset)
 
-## Import the managed clusters into ArgoCD
+### Import the managed clusters into ArgoCD
 
 Now that we created the grouping of clusters to work with, let's import them in ArgoCD. Do to so, we need to create a `GitOpsCluster` that will define where is the ArgoCD to integrate with, along with the `Placement` rule to use. In our case, we will use the label `local-argo: True` label to dennotate clusters that should be imported.
 
