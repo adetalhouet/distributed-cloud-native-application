@@ -25,6 +25,7 @@ You will then be able to access the `Online Boutique` web interface to browse it
     - [Access the online boutique](#access-the-online-boutique)
     - [Traffic path selection](#traffic-path-selection)
 - [Rotate TLS certificates](#rotate-certificates)
+- [TL;DR](#tl;dr)
 
 <!-- TOC -->
 
@@ -55,6 +56,8 @@ ca-toronto      true           https://3D842EDA5E07B5366E99DC035604DD01.sk1.ca-c
 local-cluster   true           https://api.ca-central.adetalhouet.ca:6443                                    True     True        62d
 us-philly       true           https://aks-rhdps-cc8892b9.hcp.eastus.azmk8s.io:443                           True     True        2d1h
 ~~~
+
+`local-cluster` is reference below as `ca-central`. All the operations below will be executed against that cluster.
 
 When RHACM manages a cluster, it creates a namespace that have its name, and uses this namespace to host information it controls, such as policies generated for that cluster.
 
@@ -270,3 +273,76 @@ ACM will:
 - generate new policies for the cluster matching its placement rule
 
 While doing so, you might observe a brief traffic interuption, and Skupper will have to recreate the links from the remote sites to the central site.
+
+## TL;DR
+
+Below are the all-in-one commands to run from the bare metal server which have access to the `ca-central` cluster.
+
+### Deploy everything
+
+~~~
+# Create cluster set
+oc apply -f managed-cluster-set.yaml
+oc label managedcluster ca-toronto cluster.open-cluster-management.io/clusterset=online-boutique
+oc label managedcluster us-philly cluster.open-cluster-management.io/clusterset=online-boutique
+oc label managedcluster local-cluster cluster.open-cluster-management.io/clusterset=online-boutique
+
+# Import clusters in ArgoCD
+oc apply -f gitopscluster.yaml
+oc label managedcluster ca-toronto local-argo=True
+oc label managedcluster us-philly local-argo=True
+oc label managedcluster local-cluster local-argo=True
+
+# Create Virtual Application Network
+oc create -f online-boutique-placement.yaml
+oc label managedcluster ca-toronto online-boutique=True
+oc label managedcluster us-philly online-boutique=True
+oc label managedcluster local-cluster online-boutique=True
+oc apply -f skupper/appset-skupper.yaml
+oc label managedcluster ca-toronto link-to-central=True
+oc label managedcluster us-philly link-to-central=True
+
+# Deploy the application
+oc apply -f online-boutique/appset-online-boutique.yaml
+
+# Wait for Skupper to be up and running
+sleep 30
+
+# Deploy redis and expose the service through Skupper gateway
+podman run -d --name redis_server -v $PWD/redis-data:/var/redis/data -p 6379:6379 redis
+skupper gateway expose redis-cart 10.0.0.249 6379 --protocol tcp -c admin -n onlineboutique --type podman --name gateway
+~~~
+
+### Delete everything
+
+~~~
+# Remove clusters labels
+oc label managedcluster ca-toronto link-to-central-
+oc label managedcluster us-philly link-to-central-
+oc label managedcluster ca-toronto online-boutique-
+oc label managedcluster us-philly online-boutique-
+oc label managedcluster local-cluster online-boutique-
+
+# Remove application set
+oc delete -f online-boutique/appset-online-boutique.yaml
+oc delete -f skupper/appset-skupper.yaml
+oc delete -f online-boutique-placement.yaml
+
+# Wait 30 sec for applications to be remove
+sleep 30
+
+# Remove clusters from ArgoCD
+oc label managedcluster ca-toronto local-argo-
+oc label managedcluster us-philly local-arg-
+oc label managedcluster local-cluster local-argo-
+oc delete -f gitopscluster.yaml
+
+# Remove cluster set labels
+oc label managedcluster ca-toronto cluster.open-cluster-management.io/clusterset-
+oc label managedcluster us-philly cluster.open-cluster-management.io/clusterset-
+oc label managedcluster local-cluster cluster.open-cluster-management.io/clusterset-
+oc delete -f managed-cluster-set.yaml
+
+# Delete redis and skupper gateway
+podman rm -f gateway redis_server
+~~~
