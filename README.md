@@ -216,7 +216,7 @@ skupper   skupper-onlineboutique.apps.ca-central.adetalhouet.ca          skupper
 
 The application is provided through a Helm chart, where all the various microservice are defined. In order to specify which microservice will be deployed where, we have created site specific Values.yaml file, prefixed with the name of the site.
 
-Similarly as the Skupper site controller deployment, we are using an ApplicationSet that will use the samepPlacement rule defined prior; e.g. using label `online-boutique: True`.
+Similarly as the Skupper site controller deployment, we are using an ApplicationSet that will use the same placement rule defined prior e.g. using label `online-boutique: True`.
 
 Finally, we have added a load generator in the `ca-central` site in order to simulate traffic in our website.
 
@@ -230,14 +230,14 @@ The ArgoCD Application should be deployed and shown in ArgoCD
 ![](assets/argo-online-boutique.png)
 
 We can see in Skupper all the services exposed
-![] (assets/skupper-inventory.png)
+![](assets/skupper-inventory.png)
 
 If all was done correctly, you should see the service interacting with each others
 ![](assets/skupper-service-interaction.png)
 
 ### Access the online boutique
 
-Retrieve the route and access the online boutique
+Retrieve the route from the `ca-central` cluster and access the online boutique
 
 ~~~
 $ oc get route -n onlineboutique frontend
