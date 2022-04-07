@@ -3,6 +3,7 @@
 This tutorial demonstrates how to deploy the [Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo/) microservices demo application across bare metal and multiple Kubernetes clusters that are located in different public and private cloud providers. This project contains a 10-tier microservices application developed by Google to demonstrate the use of technologies like Kubernetes.
 
 In this tutorial, you will create a Virtual Application Network, using Skupper, that enables communications across a bare metal server, the public and private clusters. You will then deploy a subset of the application's grpc based microservices to each environment, using an ArgoCD ApplicationSet. 
+
 You will then be able to access the `Online Boutique` web interface to browse items, add them to the cart and purchase them.
 
 ## Table of Contents
@@ -86,7 +87,7 @@ This is the result in RHACM
 
 ### Import the managed clusters into ArgoCD
 
-Now that we created the grouping of clusters to work with, let's import them in ArgoCD. Do to so, we need to create a `GitOpsCluster` that will define where is the ArgoCD to integrate with, along with the `Placement` rule to use. In our case, we will use the label `local-argo: True` label to dennotate clusters that should be imported.
+Now that we created the grouping of clusters to work with, let's import them in ArgoCD. Do to so, we need to create a `GitOpsCluster` that will define where is the ArgoCD to integrate with, along with the `Placement` rule to use. In our case, we will use the label `local-argo: True` to denote clusters that should be imported.
 
 Apply the following
 
@@ -115,7 +116,8 @@ In order to deploy Skupper across all the 3 clusters, we will use an ArgoCD Appl
 
 To customize the manifest deployed in each site, we are using Kustomize with one overlay folder per cluster, matching the cluster name.
 
-As we have one cluster supporting [Operator Lifecycle Manager](https://olm.operatorframework.io/), and two clusters not supporting it, we have two methods of deploying Skupper site controller: one using the [Skupper operator](skupper/base/operaror), one using the [manifests](skupper/base/site-controller).
+As we have one cluster supporting [Operator Lifecycle Manager](https://olm.operatorframework.io/), and two clusters not supporting it, we have two methods of deploying Skupper site controller: one using the [Skupper operator](skupper/base/operator), one using the [manifests](skupper/base/site-controller).
+
 The way to deploy [Skupper router](skupper/base/instance) is common to all site, and will be customized with the site name and site specific authentication method.
 
 Apply the following
@@ -128,7 +130,7 @@ oc label managedcluster local-cluster online-boutique=True
 oc apply -f skupper/appset-skupper.yaml
 ~~~
 
-This is the result in ArgoCD. It is expected the `skupper-local-cluster` ArgoCD Application shows out-of-sync, we will explain that in the next section.
+This is the result in ArgoCD. It is expected the `skupper-local-cluster` ArgoCD Application shows out-of-sync, we will explain later why this is useful.
 In each site, in the namespace `onlineboutique` you should see the Skupper pod. At this point, there is no connectivity between the sites.
 
 ![](assets/skupper-argo.png)
@@ -136,10 +138,12 @@ In each site, in the namespace `onlineboutique` you should see the Skupper pod. 
 ### mTLS establishment
 
 Skupper rely on an mTLS to establish a Virtual Application Network. As such, it requires a `Secret` containing the certificate authority, the certificate and the key to be present in all sites.
-To have Skupper populating the TLS data into a secret, we can simply create an empty secret with this label `skupper.io/type: connection-token-request`. Skupper site controller will populate all the required information in this secret automatically. In our example, the secret will be generated in the **local-cluster**.
+
+To have Skupper populating the TLS data into a secret, we can simply create an empty secret with this label `skupper.io/type: connection-token-request`. Skupper site controller will populate all the required information in this secret automatically. In our example, the secret will be generated in the **ca-central**.
+
 Given we are deploying the secret using GitOps, as soon as Skupper adds data into it, ArgoCD will report the secret out-of-sync. This is expected, and we purposely disabled `self-heal` in this ArgoCD Application because we do tolerate this out-of-sync. We will see later why it is very useful.
 
-Once the TLS data exists, it needs to be provided to the other sites in order to setup the mTLS session. To do so, we will use an ![RHACM Policy](skupper/overlays/local-cluster/link-to-central-policy.yaml) along with templating functions to copy the secret data over the remote sites. The policy will match clusters based on the `PlacementRule` defined; in our case, it is matching cluster with label `link-to-central: True`.
+Once the TLS data exists, it needs to be provided to the other sites in order to setup the mTLS session. To do so, we will use an [RHACM Policy](skupper/overlays/local-cluster/link-to-central-policy.yaml) along with templating functions to copy the secret data over the remote sites. The policy will match clusters based on the `PlacementRule` defined; in our case, it is matching cluster with label `link-to-central: True`.
 
 As defined in the policy, using the templating functions, the secret looks like this:
 ~~~
@@ -162,7 +166,7 @@ data:
 type: Opaque
 ~~~
 
-RHACM will render this policy and will place it in each cluster's namespace, based on the matched clusters. This generated policies are also the source of our `skupper-local-cluster` ArgoCD Application out-of-sync status. Again, this is expected, and we will see later why it is very useful.
+RHACM will render this policy and will place it in each cluster's namespace, based on the matched clusters. These generated policies are also the source of our `skupper-local-cluster` ArgoCD Application out-of-sync status. Again, this is expected, and we will see later why it is very useful.
 
 Given we already deployed the Skupper ApplicationSet previously, let just add the label to have the secret containing the TLS information propageted to our two remote sites.
 ~~~
@@ -179,6 +183,7 @@ This is the result you should observe in RHACM
 ### Skupper gateway for bare metal server
 
 The last piece of our architecture is connecting the bare metal server to our Virtual Application Network. As part of the overall application, our goal is to host the redis database on bare metal, and reference it using the `redis-cart` name.
+
 In order to provide the redis service in our link fabric, we will create a Skupper gateway that will connect to our `ca-central` site, and we will expose the service using it's IP/PORT.
 
 Run the following in your sever to deploy Redis and expose the redis service.
@@ -235,7 +240,7 @@ The ArgoCD Application should be deployed and shown in ArgoCD
 We can see in Skupper all the services exposed
 ![](assets/skupper-inventory.png)
 
-If all was done correctly, you should see the service interacting with each others
+If all was done correctly, you should see the services interacting with each others
 ![](assets/skupper-service-interaction.png)
 
 ### Access the online boutique
