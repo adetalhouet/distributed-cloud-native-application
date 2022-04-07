@@ -21,6 +21,9 @@ You will then be able to access the `Online Boutique` web interface to browse it
     - [Service Layer Interconnect](#service-layer-interconnect)
 - [Deploy the application](#deploy-the-application)
     - [Access the online boutique](#access-the-online-boutique)
+    - [Traffic path selection](#traffic-path-selection)
+- [Rotate TLS certificates](#rotate-certificates)
+
 <!-- TOC -->
 
 ## High level architecture
@@ -236,3 +239,24 @@ NAME       HOST/PORT                                                PATH   SERVI
 frontend   frontend-onlineboutique.apps.ca-central.adetalhouet.ca          frontend   http                 None
 ~~~
 
+### Traffic path selection
+
+Skupper is able to route traffic by assessing the best path to use, considering application load and link latency. In our deployment, couple of microservices are deployed in both `us-philly` and `ca-toronto` sites, to demonstrate this built-in Skupper capability. It can be observed in the service interaction, but also when looking at a service itself.
+This allow enables failover scenarios, with active-active setup. If one site goes down, the application will continue to work, and Skupper will be the one routing the traffic to the proper endpoint.
+
+## Rotate TLS certificates
+
+If the TLS data has been compromized or needs to be rotated, the only operation to do is a sync in ArgoCD `skupper-local-cluster` Application.
+As explain above, the secret and the generated policies are either in *out-of-sync* state of *require prunning* state.
+
+By doing a sync with pruning and replace options enabled, 
+ArgoCD will:
+- delete the secret
+- delete the generated policies
+- re-create the secret
+Skupper will:
+- add new TLS certificate authority, certificate and key to the secret
+ACM will:
+- generate new policies for the cluster matching its placement rule
+
+While doing so, you might observe a brief traffic interuption, and Skupper will have to recreate the links from the remote sites to the central site.
