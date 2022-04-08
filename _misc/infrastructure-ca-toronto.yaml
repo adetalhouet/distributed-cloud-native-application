@@ -1,0 +1,12 @@
+apiVersion: config.openshift.io/v1
+kind: Infrastructure
+metadata:
+  name: cluster
+spec:
+  cloudConfig:
+    name: ""
+  platformSpec:
+    aws: {}
+    type: AWS
+status:
+  apiServerURL: https://3D842EDA5E07B5366E99DC035604DD01.sk1.ca-central-1.eks.amazonaws.com

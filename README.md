@@ -89,6 +89,8 @@ This is the result in RHACM
 
 Now that we created the grouping of clusters to work with, let's import them in ArgoCD. Do to so, we need to create a `GitOpsCluster` that will define where is the ArgoCD to integrate with, along with the `Placement` rule to use. In our case, we will use the label `local-argo: True` to denote clusters that should be imported.
 
+In case you are importing non-OCP clusters, please follow [these instructions](_misc/README.md) first.
+
 Apply the following
 
 ~~~

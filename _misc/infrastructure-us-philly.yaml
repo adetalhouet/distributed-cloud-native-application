@@ -1,0 +1,12 @@
+apiVersion: config.openshift.io/v1
+kind: Infrastructure
+metadata:
+  name: cluster
+spec:
+  cloudConfig:
+    name: ""
+  platformSpec:
+    aws: {}
+    type: Azure
+status:
+  apiServerURL: https://aks-rhdps-cc8892b9.hcp.eastus.azmk8s.io:443
