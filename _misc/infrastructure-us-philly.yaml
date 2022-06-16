@@ -9,4 +9,4 @@ spec:
     aws: {}
     type: Azure
 status:
-  apiServerURL: https://aks-rhdps-cc8892b9.hcp.eastus.azmk8s.io:443
+  apiServerURL: https://ca-saint-john-dns-04137031.hcp.canadaeast.azmk8s.io:443 

@@ -1,0 +1,44 @@
+# global defaults
+global:
+  tag: v0.3.6
+  repository: gcr.io/google-samples/microservices-demo
+
+# microservice specific details
+# Note: `repository` and `tag` can be overriten individually if needed
+adservice:
+  enabled: true
+  image: adservice
+cartservice:
+  enabled: true
+  image: cartservice
+checkoutservice:
+  enabled: true
+  image: checkoutservice
+currencyservice:
+  enabled: true
+  image: currencyservice
+emailservice:
+  enabled: false
+  image: emailservice
+frontend:
+  enabled: false
+  image: frontend
+paymentservice:
+  enabled: false
+  image: paymentservice
+productcatalogservice:
+  enabled: false
+  image: productcatalogservice
+recommendationservice:
+  enabled: false
+  image: recommendationservice
+rediscart:
+  enabled: false
+  image: redis
+  tag: alpine
+shippingservice:
+  enabled: true
+  image: shippingservice
+loadgenerator:
+  enabled: false
+  image: loadgenerator
