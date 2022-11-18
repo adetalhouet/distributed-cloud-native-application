@@ -66,7 +66,7 @@ When RHACM manages a cluster, it creates a namespace that have its name, and use
 
 ### Create a managed cluster set
 
-In order to manage the various K8S clusters, we create a `ManagedClusterSet` called **5g-core** in Red Hat Advanced Cluster Management. To add clusters in this clusterSet, we need to add the following label `cluster.open-cluster-management.io/clusterset=online-boutique` to the `ManagedClusters` to import.
+In order to manage the various K8S clusters, we create a `ManagedClusterSet` called **online-boutique** in Red Hat Advanced Cluster Management. To add clusters in this clusterSet, we need to add the following label `cluster.open-cluster-management.io/clusterset=online-boutique` to the `ManagedClusters` to import.
 
 This clusterSet is then bound to a specific namespace, using a `ManagedClusterSetBinding`. This allows ACM to take action in these clusters through that namespace. In our case, we will bound the clusterSet to `openshift-gitops` namespace, as this is where we will deploy ArgoCD ApplicationSet.
 
@@ -74,8 +74,8 @@ Apply the following
 
 ~~~
 oc apply -f managed-cluster-set.yaml
-oc label managedcluster ca-regina cluster.open-cluster-management.io/clusterset=5g-core
-oc label managedcluster local-cluster cluster.open-cluster-management.io/clusterset=5g-core
+oc label managedcluster ca-regina cluster.open-cluster-management.io/clusterset=online-boutique
+oc label managedcluster local-cluster cluster.open-cluster-management.io/clusterset=online-boutique
 ~~~
 
 This is the result in RHACM
@@ -112,7 +112,7 @@ Skupper is the technology being used to interconnect the K8S clusters together, 
 
 ### Site establishment
 
-In order to deploy Skupper across all the 2 clusters, we will use an ArgoCD ApplicationSet. It will use the [clusterDecisionResource](https://argocd-applicationset.readthedocs.io/en/stable/Generators-Cluster-Decision-Resource/) generator and will use a `Placement` rule using the label `5g-core: True` to match clusters for which to generate an Application.
+In order to deploy Skupper across all the 2 clusters, we will use an ArgoCD ApplicationSet. It will use the [clusterDecisionResource](https://argocd-applicationset.readthedocs.io/en/stable/Generators-Cluster-Decision-Resource/) generator and will use a `Placement` rule using the label `online-boutique: True` to match clusters for which to generate an Application.
 
 To customize the manifest deployed in each site, we are using Kustomize with one overlay folder per cluster, matching the cluster name.
 
