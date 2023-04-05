@@ -5,8 +5,5 @@ metadata:
   name: online-boutique-clusters
   namespace: openshift-gitops
 spec:
-  predicates:
-  - requiredClusterSelector:
-      labelSelector:
-        matchLabels:
-          online-boutique: "True"
+  clusterSets:
+    - online-boutique
