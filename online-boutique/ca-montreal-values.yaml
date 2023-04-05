@@ -18,13 +18,13 @@ currencyservice:
   enabled: true
   image: currencyservice
 emailservice:
-  enabled: false
+  enabled: true
   image: emailservice
 frontend:
   enabled: false
   image: frontend
 paymentservice:
-  enabled: false
+  enabled: true
   image: paymentservice
 productcatalogservice:
   enabled: false
