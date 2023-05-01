@@ -6,4 +6,4 @@ metadata:
 data:
   name: CHANGEME
   console-authentication: internal
-  router-console: "true"
+  console: "true"
