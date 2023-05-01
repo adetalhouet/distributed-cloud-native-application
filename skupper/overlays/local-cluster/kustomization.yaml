@@ -7,7 +7,7 @@ bases:
  # - ../../base/instance
 
 resources:
-  - https://github.com/skupperproject/skupper/blob/1.4.0-rc1/cmd/site-controller/deploy-watch-current-ns.yaml
+  - https://raw.githubusercontent.com/skupperproject/skupper/1.4.0-rc1/cmd/site-controller/deploy-watch-current-ns.yaml
   - link-to-central-secret.yaml
   - link-to-central-policy.yaml
 
