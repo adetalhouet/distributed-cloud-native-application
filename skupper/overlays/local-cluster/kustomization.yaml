@@ -3,8 +3,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 bases:
-  - ../../base/operator
-  - ../../base/instance
+ # - ../../base/operator
+ # - ../../base/instance
+ - https://github.com/skupperproject/skupper/blob/1.4.0-rc1/cmd/site-controller/deploy-watch-current-ns.yaml
 
 resources:
   - link-to-central-secret.yaml
